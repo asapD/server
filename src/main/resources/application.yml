@@ -1,0 +1,4 @@
+spring:
+  config:
+    import:
+      - classpath:/db.yml  # db.yml 생성해서, 로컬에 맞는 db 설정!!
