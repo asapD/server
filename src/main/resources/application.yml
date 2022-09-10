@@ -1,4 +1,12 @@
 spring:
-  config:
-    import:
-      - classpath:/db.yml  # db.yml 생성해서, 로컬에 맞는 db 설정!!
+  datasource:
+    url: jdbc:mysql://localhost:3305/test_db
+    username: test
+    password: test_pw
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  redis:
+    host: localhost
+    port: 6378
