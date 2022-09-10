@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -28,12 +25,16 @@ public class Member extends BaseEntity{
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     @Builder
-    public Member(String name, String contact, String email, String password) {
+    public Member(String name, String contact, String email, String password, Authority authority) {
         this.name = name;
         this.contact = contact;
         this.email = email;
         this.password = password;
+        this.authority = authority;
     }
 
 }
