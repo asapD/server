@@ -1,4 +1,4 @@
-package asapD.server.dto;
+package asapD.server.controller.dto.store;
 
 public class StoreResponseDto {
     private String name;

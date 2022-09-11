@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+// 이메일 중복 , 전화번호 인증
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -24,10 +26,11 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * 회원가입
+     * 회원가입 (기능 추가 : 이메일중복, 전화번호 인증)
      * @param memberSignUpRequest
      */
     public void signUp(MemberSignUpRequest memberSignUpRequest) {
+
         Member member = Member.builder()
                 .name(memberSignUpRequest.getName())
                 .email(memberSignUpRequest.getEmail())
