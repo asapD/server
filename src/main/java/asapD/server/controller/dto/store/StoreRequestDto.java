@@ -1,4 +1,4 @@
-package asapD.server.dto;
+package asapD.server.controller.dto.store;
 
 import asapD.server.domain.Store;
 import lombok.Getter;
