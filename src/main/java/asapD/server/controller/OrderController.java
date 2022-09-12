@@ -1,7 +1,7 @@
 package asapD.server.controller;
 
-import asapD.server.controller.dto.OrdersResponseDto;
-import asapD.server.controller.dto.OrdersRequestDto;
+import asapD.server.controller.dto.orders.OrdersResponseDto;
+import asapD.server.controller.dto.orders.OrdersRequestDto;
 import asapD.server.service.OrdersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
