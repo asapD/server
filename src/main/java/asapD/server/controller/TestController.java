@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/auth/test")
 public class TestController {
 
     @ApiOperation(value="테스트", notes="부가 설명")

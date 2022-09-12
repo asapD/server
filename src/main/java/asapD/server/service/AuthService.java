@@ -26,7 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * 회원가입 (기능 추가 : 이메일중복, 전화번호 인증)
+     * 회원가입
      * @param memberSignUpRequest
      */
     public void signUp(MemberSignUpRequest memberSignUpRequest) {
