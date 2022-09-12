@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrdersResponseDto {
+public class SerialNumRequestDto {
 
-  private Long ordersId;
   private String serialNum;
-
+  private Long orderId;
 }
