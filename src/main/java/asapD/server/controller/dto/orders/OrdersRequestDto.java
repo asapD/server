@@ -1,4 +1,4 @@
-package asapD.server.controller.dto;
+package asapD.server.controller.dto.orders;
 
 import java.util.HashMap;
 import lombok.AllArgsConstructor;
