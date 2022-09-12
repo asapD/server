@@ -90,4 +90,13 @@ public class OrdersService {
      throw new IllegalStateException("not equal");
    }
   }
+
+  public List<Orders> getOrderAll(String email) {
+    Member member =  memberRepository.findByEmail(email)
+        .orElseThrow(() -> {
+          throw new NoSuchElementException("no");
+        });
+
+    return ordersRepository.findAllByMember(member);
+  }
 }

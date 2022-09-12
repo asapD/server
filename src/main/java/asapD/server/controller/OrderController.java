@@ -5,6 +5,7 @@ import asapD.server.controller.dto.orders.OrdersRequestDto;
 import asapD.server.controller.dto.orders.SerialNumRequestDto;
 import asapD.server.domain.Orders;
 import asapD.server.service.OrdersService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,5 +35,11 @@ public class OrderController {
   public ResponseEntity<Void> verifySerialNum(@RequestBody SerialNumRequestDto request) {
     ordersService.verifySerialNum(request);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/api/orders")
+  public ResponseEntity<List<Orders>> getOrderAll() {
+    String email = "";
+    return ResponseEntity.ok(ordersService.getOrderAll(email));
   }
 }
