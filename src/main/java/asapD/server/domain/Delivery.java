@@ -3,8 +3,10 @@ package asapD.server.domain;
 import lombok.Getter;
 
 import javax.persistence.*;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 public class Delivery extends BaseEntity{
 
