@@ -14,9 +14,9 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
 
-    @Transactional
-    public List<Store> findAll() {
-
-        return storeRepository.findAll();
-    }
+//    @Transactional
+//    public List<Store> findAll() {
+//
+//        return storeRepository.findAll();
+//    }
 }
