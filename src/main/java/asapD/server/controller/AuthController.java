@@ -8,6 +8,7 @@ import asapD.server.repository.MemberRepository;
 import asapD.server.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Random;
 
 @Slf4j
 @RestController
@@ -28,6 +30,7 @@ public class AuthController {
 
     /**
      * 회원가입
+     *
      * @param memberSignUpRequest
      */
     @PostMapping("/sign-up")
@@ -37,23 +40,31 @@ public class AuthController {
 
     /**
      * 이메일 중복 검사
+     *
      * @param memberEmailRequest
      */
     @PostMapping("/verify-email")
     public void verifyEmail(@RequestBody MemberEmailRequest memberEmailRequest) {
-        if(memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()){
+        if (memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()) {
             throw new RuntimeException("중복된 이메일입니다");
         }
     }
 
     /**
      * 전화번호 인증
+     *
      * @param memberContactRequest
      */
     @PostMapping("/verify-contact")
-    public void verifyContact(@RequestBody MemberContactRequest memberContactRequest) {
-
-    }
+    public void verifyContact(@RequestBody MemberContactRequest memberContactRequest){
+        Random rand = new Random();
+        String numStr = "";
+        for (int i = 0; i < 4; i++) {
+            String ran = Integer.toString(rand.nextInt(10));
+            numStr += ran;
+        }
+        authService.SendCertifiedMessage(memberContactRequest.getContact(), numStr);
+}
 
     /**
      * 로그인
