@@ -4,6 +4,8 @@ import asapD.server.config.security.jwt.TokenProvider;
 import asapD.server.controller.dto.member.MemberContactCodeRequest;
 import asapD.server.controller.dto.member.MemberSignInRequest;
 import asapD.server.controller.dto.member.MemberSignUpRequest;
+import asapD.server.controller.exception.ApiException;
+import asapD.server.controller.exception.ApiExceptionEnum;
 import asapD.server.domain.Authority;
 import asapD.server.domain.Member;
 import asapD.server.repository.MemberRepository;
@@ -93,6 +95,7 @@ public class AuthService {
         } catch (CoolsmsException e) {
             System.out.println(e.getMessage());
             System.out.println(e.getCode());
+            throw new ApiException(ApiExceptionEnum.SMS_EXCEPTION);
         }
     }
 
@@ -103,10 +106,10 @@ public class AuthService {
     public void verifyCode(MemberContactCodeRequest memberContactCodeRequest) {
 
         String findCode = Optional.ofNullable(redisClient.getValue(memberContactCodeRequest.getContact())).orElseThrow(
-                () -> new NoSuchElementException("time out")
+                () -> new ApiException(ApiExceptionEnum.TIMEOUT_EXCEPTION)
         );
         if (!findCode.equals(memberContactCodeRequest.getCode())) {
-            throw new IllegalStateException("not equal");
+            throw new ApiException(ApiExceptionEnum.SERIALNUM_INVALID_EXCEPTION);
         }
 
     }

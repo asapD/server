@@ -1,6 +1,8 @@
 package asapD.server.controller;
 
 import asapD.server.controller.dto.member.*;
+import asapD.server.controller.exception.ApiException;
+import asapD.server.controller.exception.ApiExceptionEnum;
 import asapD.server.repository.MemberRepository;
 import asapD.server.service.AuthService;
 import io.swagger.annotations.ApiOperation;
@@ -46,7 +48,7 @@ public class AuthController {
     @ApiOperation(value = "이메일 중복 검사")
     public void verifyEmail(@RequestBody MemberEmailRequest memberEmailRequest) {
         if (memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()) {
-            throw new RuntimeException("중복된 이메일입니다");
+            throw new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION);
         }
     }
 
