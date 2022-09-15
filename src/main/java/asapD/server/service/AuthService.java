@@ -1,11 +1,13 @@
 package asapD.server.service;
 
 import asapD.server.config.security.jwt.TokenProvider;
+import asapD.server.controller.dto.member.MemberContactCodeRequest;
 import asapD.server.controller.dto.member.MemberSignInRequest;
 import asapD.server.controller.dto.member.MemberSignUpRequest;
 import asapD.server.domain.Authority;
 import asapD.server.domain.Member;
 import asapD.server.repository.MemberRepository;
+import asapD.server.utils.RedisClient;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
@@ -16,8 +18,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 // 이메일 중복 , 전화번호 인증
@@ -30,6 +35,7 @@ public class AuthService {
     private final TokenProvider tokenProvider;
 
     private final PasswordEncoder passwordEncoder;
+    private final RedisClient redisClient;
 
     /**
      * 회원가입
@@ -66,6 +72,9 @@ public class AuthService {
      *
      */
     public void SendCertifiedMessage(String phoneNumber, String cerNum){
+        // code redis 에 저장
+        verifiedCodeSave(phoneNumber, cerNum);
+
         String api_key = "NCSK0TRMGX0QQC86";
         String api_secret = "RVDMYMYTYNFI0FKDDVKBF3P3XIMLCGX7";
         Message coolsms = new Message(api_key, api_secret);
@@ -85,5 +94,20 @@ public class AuthService {
             System.out.println(e.getMessage());
             System.out.println(e.getCode());
         }
+    }
+
+    public void verifiedCodeSave(String contact, String code) {
+        redisClient.setValue(contact, code, 3L); // 유효시간 : 3분
+    }
+
+    public void verifyCode(MemberContactCodeRequest memberContactCodeRequest) {
+
+        String findCode = Optional.ofNullable(redisClient.getValue(memberContactCodeRequest.getContact())).orElseThrow(
+                () -> new NoSuchElementException("time out")
+        );
+        if (!findCode.equals(memberContactCodeRequest.getCode())) {
+            throw new IllegalStateException("not equal");
+        }
+
     }
 }
