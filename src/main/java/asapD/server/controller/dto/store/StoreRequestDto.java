@@ -10,16 +10,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class StoreRequestDto {
     private String name;
-
     private int owner;
-
     private String address;
 
-    public Store toEntity(){
-        return Store.builder()
-                .name(name)
-                .owner(owner)
-                .address(address)
-                .build();
-    }
 }

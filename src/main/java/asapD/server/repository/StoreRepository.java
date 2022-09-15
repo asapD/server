@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
-public interface StoreRepository extends PagingAndSortingRepository<Store, Long> {
-    @Override
+public interface StoreRepository extends JpaRepository<Store, Long> {
     Page<Store> findAll(Pageable pageable);
 }
