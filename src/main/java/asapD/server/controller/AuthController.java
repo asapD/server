@@ -6,6 +6,7 @@ import asapD.server.controller.dto.member.MemberSignInRequest;
 import asapD.server.controller.dto.member.MemberSignUpRequest;
 import asapD.server.repository.MemberRepository;
 import asapD.server.service.AuthService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
@@ -34,6 +35,7 @@ public class AuthController {
      * @param memberSignUpRequest
      */
     @PostMapping("/sign-up")
+    @ApiOperation(value = "회원가입")
     public void signUp(@RequestBody MemberSignUpRequest memberSignUpRequest) {
         authService.signUp(memberSignUpRequest);
     }
@@ -44,6 +46,7 @@ public class AuthController {
      * @param memberEmailRequest
      */
     @PostMapping("/verify-email")
+    @ApiOperation(value = "이메일 중복 검사")
     public void verifyEmail(@RequestBody MemberEmailRequest memberEmailRequest) {
         if (memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()) {
             throw new RuntimeException("중복된 이메일입니다");
@@ -56,6 +59,7 @@ public class AuthController {
      * @param memberContactRequest
      */
     @PostMapping("/verify-contact")
+    @ApiOperation(value = "전화번호 인증", notes = "회원가입시 휴대폰 번호 인증")
     public void verifyContact(@RequestBody MemberContactRequest memberContactRequest){
         Random rand = new Random();
         String numStr = "";
@@ -73,6 +77,7 @@ public class AuthController {
      * return header:{"Authorization" : "Bearer {access token}"}
      */
     @PostMapping("/sign-in")
+    @ApiOperation(value = "로그인")
     public void signIn(@RequestBody MemberSignInRequest memberSignInRequest, HttpServletResponse response) {
         String accessToken = authService.signIn(memberSignInRequest);
         response.addHeader("Authorization", "Bearer "+ accessToken);
