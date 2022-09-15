@@ -1,9 +1,6 @@
 package asapD.server.controller;
 
-import asapD.server.controller.dto.member.MemberContactRequest;
-import asapD.server.controller.dto.member.MemberEmailRequest;
-import asapD.server.controller.dto.member.MemberSignInRequest;
-import asapD.server.controller.dto.member.MemberSignUpRequest;
+import asapD.server.controller.dto.member.*;
 import asapD.server.repository.MemberRepository;
 import asapD.server.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +61,12 @@ public class AuthController {
             numStr += ran;
         }
         authService.SendCertifiedMessage(memberContactRequest.getContact(), numStr);
-}
+    }
+
+    @PostMapping("/verify-contact-code")
+    public void verifyContactCode(@RequestBody MemberContactCodeRequest memberContactCodeRequest) {
+        authService.verifyCode(memberContactCodeRequest);
+    }
 
     /**
      * 로그인
