@@ -16,23 +16,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @Getter
-    @AllArgsConstructor
-    static class ResponseResult{
-        private String message;
-    }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseResult handleBadCredentialsException(BadCredentialsException e) {
-        return new ResponseResult("로그인 정보가 일치하지 않습니다");
+    public ResponseEntity<ExceptionResponse> handleBadCredentialsExceptionHandler(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ExceptionResponse.builder().status(HttpStatus.BAD_REQUEST.value()).message("로그인에 실패하였습니다")
+                        .build()
+        );
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseResult RuntimeExceptionHandler(RuntimeException e) {
-        return new ResponseResult(e.getMessage());
-    }
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ExceptionResponse> exceptionHandler(ApiException e) {

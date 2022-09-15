@@ -25,6 +25,9 @@ public enum ApiExceptionEnum {
   // redis
   TIMEOUT_EXCEPTION(HttpStatus.FORBIDDEN, "유효시간이 만료되었습니다."),
 
+  // SMS
+  SMS_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "api 내부 통신에러입니다"),
+
   ;
 
   private final HttpStatus httpStatus;
