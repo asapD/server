@@ -21,6 +21,10 @@ public enum ApiExceptionEnum {
   // Orders
   ORDER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "요청한 자원이 없습니다."),
   SERIALNUM_INVALID_EXCEPTION(HttpStatus.BAD_REQUEST, "요청 변수를 확인해주세요."),
+
+  // redis
+  TIMEOUT_EXCEPTION(HttpStatus.FORBIDDEN, "유효시간이 만료되었습니다."),
+
   ;
 
   private final HttpStatus httpStatus;

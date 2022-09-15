@@ -1,6 +1,8 @@
 package asapD.server.service;
 
 import asapD.server.controller.dto.orders.SerialNumRequestDto;
+import asapD.server.controller.exception.ApiException;
+import asapD.server.controller.exception.ApiExceptionEnum;
 import asapD.server.repository.ItemRepository;
 import asapD.server.repository.MemberRepository;
 import asapD.server.repository.OrdersItemRepository;
@@ -38,7 +40,7 @@ public class OrdersService {
   public OrdersResponseDto createOrders(String email, OrdersRequestDto dto) {
     // 회원 정보 조회
     Member member = memberRepository.findByEmail(email).orElseThrow(() -> {
-      throw new NoSuchElementException("no");
+      throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
     });
 
     // 주문 상품 생성
@@ -74,7 +76,7 @@ public class OrdersService {
 
   public Orders getOrder(Long orderId) {
     return ordersRepository.findById(orderId).orElseThrow(() -> {
-      throw new NoSuchElementException("no");
+      throw new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION);
     });
   }
 
@@ -83,18 +85,18 @@ public class OrdersService {
 
    String value = Optional.ofNullable(redisClient.getValue(key))
        .orElseThrow(() -> {
-      throw new NoSuchElementException("time out");
+      throw new ApiException(ApiExceptionEnum.TIMEOUT_EXCEPTION);
     });
 
    if (!value.equals(request.getSerialNum())) {
-     throw new IllegalStateException("not equal");
+     throw new ApiException(ApiExceptionEnum.SERIALNUM_INVALID_EXCEPTION);
    }
   }
 
   public List<Orders> getOrderAll(String email) {
     Member member =  memberRepository.findByEmail(email)
         .orElseThrow(() -> {
-          throw new NoSuchElementException("no");
+          throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
         });
 
     return ordersRepository.findAllByMember(member);
