@@ -7,6 +7,8 @@ import asapD.server.domain.Orders;
 import asapD.server.response.ApiResponse;
 import asapD.server.service.OrdersService;
 import java.util.List;
+
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ public class OrderController {
   private final OrdersService ordersService;
 
   @PostMapping
+  @ApiOperation(value = "주문 생성")
   public ResponseEntity<ApiResponse> createOrder(@RequestBody OrdersRequestDto request) {
     // authentication 에서 추출해야 하는 email
     String email = "";
@@ -34,6 +37,7 @@ public class OrderController {
   }
 
   @GetMapping("/{orderId}")
+  @ApiOperation(value = "주문 확인", notes = "주문 정보 확인")
   public ResponseEntity<ApiResponse> getOrder(@PathVariable Long orderId) {
     Orders response = ordersService.getOrder(orderId);
     return ResponseEntity.ok(
@@ -41,12 +45,14 @@ public class OrderController {
   }
 
   @PostMapping("/verify-serial")
+  @ApiOperation(value = "시리얼 넘버 검증")
   public ResponseEntity<ApiResponse> verifySerialNum(@RequestBody SerialNumRequestDto request) {
     ordersService.verifySerialNum(request);
     return ResponseEntity.ok(ApiResponse.builder().message("verify serialNum success").build());
   }
 
   @GetMapping
+  @ApiOperation(value = "주문 목록 확인", notes = "전체 주문 목록 확인")
   public ResponseEntity<ApiResponse> getOrderAll() {
     String email = "";
     List<Orders> response = ordersService.getOrderAll(email);
