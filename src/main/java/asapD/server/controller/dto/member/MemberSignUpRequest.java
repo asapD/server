@@ -21,12 +21,12 @@ public class MemberSignUpRequest {
     private String contact;
 
     @ApiModelProperty(example = "이메일")
-    @NotBlank(message = "값이 존재하지 않습니다")
     @Email(message = "이메일 형식에 맞지 않습니다")
+    @NotBlank(message = "값이 존재하지 않습니다")
     private String email;
 
     @ApiModelProperty(example = "비밀번호")
     @NotBlank(message = "값이 존재하지 않습니다")
-    @Pattern(regexp = "^(?=.*\\\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}")
+    @Pattern(regexp = "^[0-9a-zA-Z]{8,16}", message = "영문과 숫자를 포함한 8자~16자 조건에 맞지않습니다")
     private String password;
 }
