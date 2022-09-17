@@ -4,6 +4,7 @@ import asapD.server.controller.dto.member.*;
 import asapD.server.controller.exception.ApiException;
 import asapD.server.controller.exception.ApiExceptionEnum;
 import asapD.server.repository.MemberRepository;
+import asapD.server.response.BaseResponse;
 import asapD.server.response.ExceptionResponse;
 import asapD.server.service.AuthService;
 import io.swagger.annotations.ApiOperation;
@@ -27,9 +28,8 @@ import java.util.Random;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
-
     private final AuthService authService;
     private final MemberRepository memberRepository;
 
@@ -40,31 +40,31 @@ public class AuthController {
             @ApiResponse(code = 200, message = "회원가입 성공"),
             @ApiResponse(code = 500, message = "서버 에러")
     })
-    public void signUp(@Parameter(name = "사용자 정보 입력") @RequestBody MemberSignUpRequest memberSignUpRequest) {
+    public ResponseEntity<BaseResponse> signUp(@RequestBody MemberSignUpRequest memberSignUpRequest) {
         authService.signUp(memberSignUpRequest);
+        return ResponseEntity.ok(BaseResponse.builder().message("회원가입 성공").build());
     }
 
 
     @PostMapping("/verify-email")
     @ApiOperation(value = "이메일 중복 검사", notes = "회원가입 시 이메일 증복 검사")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "이메일 중복 X"),
+            @ApiResponse(code = 200, message = "이메일 중복 검사 성공"),
             @ApiResponse(code = 409, message = "이메일 중복")
     })
-    public void verifyEmail(@RequestBody MemberEmailRequest memberEmailRequest) {
-        if (memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()) {
-            throw new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION);
-        }
+    public ResponseEntity<BaseResponse> verifyEmail(@RequestBody MemberEmailRequest memberEmailRequest) {
+        authService.verifyEmail(memberEmailRequest);
+        return ResponseEntity.ok(BaseResponse.builder().message("이메일 중복 검사 성공").build());
     }
 
 
     @PostMapping("/verify-contact")
     @ApiOperation(value = "전화번호 인증 - SMS 전송", notes = "회원가입시 휴대폰 번호 인증")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "정상 처리"),
+            @ApiResponse(code = 200, message = "전화번호 인증 요청 성공"),
             @ApiResponse(code = 500, message = "외부 api 에러")
     })
-    public void verifyContact(@RequestBody MemberContactRequest memberContactRequest){
+    public ResponseEntity<BaseResponse> verifyContact(@RequestBody MemberContactRequest memberContactRequest){
         Random rand = new Random();
         String numStr = "";
         for (int i = 0; i < 4; i++) {
@@ -72,6 +72,7 @@ public class AuthController {
             numStr += ran;
         }
         authService.SendCertifiedMessage(memberContactRequest.getContact(), numStr);
+        return ResponseEntity.ok(BaseResponse.builder().message("전화번호 인증 요청 성공").build());
     }
 
     @PostMapping("/verify-contact-code")
@@ -81,8 +82,9 @@ public class AuthController {
             @ApiResponse(code = 403, message = "유효시간 만료"),
             @ApiResponse(code = 400, message = "인증코드 불일치")
     })
-    public void verifyContactCode(@RequestBody MemberContactCodeRequest memberContactCodeRequest) {
+    public ResponseEntity<BaseResponse> verifyContactCode(@RequestBody MemberContactCodeRequest memberContactCodeRequest) {
         authService.verifyCode(memberContactCodeRequest);
+        return ResponseEntity.ok(BaseResponse.builder().message("인증 성공").build());
     }
 
 
@@ -92,8 +94,9 @@ public class AuthController {
             @ApiResponse(code = 200, message = "로그인 성공"),
             @ApiResponse(code = 400, message = "로그인 실패", responseHeaders = @ResponseHeader())
     })
-    public void signIn(@RequestBody MemberSignInRequest memberSignInRequest, HttpServletResponse response) {
+    public ResponseEntity<BaseResponse> signIn(@RequestBody MemberSignInRequest memberSignInRequest, HttpServletResponse response) {
         String accessToken = authService.signIn(memberSignInRequest);
         response.addHeader("Authorization", "Bearer "+ accessToken);
+        return ResponseEntity.ok(BaseResponse.builder().message("로그인 성공").build());
     }
 }

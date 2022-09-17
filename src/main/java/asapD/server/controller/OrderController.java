@@ -1,14 +1,16 @@
 package asapD.server.controller;
 
+import asapD.server.config.security.config.SecurityUtil;
 import asapD.server.controller.dto.orders.OrdersResponseDto;
 import asapD.server.controller.dto.orders.OrdersRequestDto;
 import asapD.server.controller.dto.orders.SerialNumRequestDto;
 import asapD.server.domain.Orders;
-import asapD.server.response.ApiResponse;
+import asapD.server.response.BaseResponse;
 import asapD.server.service.OrdersService;
 import java.util.List;
-
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,36 +29,49 @@ public class OrderController {
 
   @PostMapping
   @ApiOperation(value = "주문 생성")
-  public ResponseEntity<ApiResponse> createOrder(@RequestBody OrdersRequestDto request) {
-    // authentication 에서 추출해야 하는 email
-    String email = "";
-
-    OrdersResponseDto response = ordersService.createOrders(email, request);
+  @ApiResponses({
+          @ApiResponse(code = 200, message = "주문 생성 성공"),
+          @ApiResponse(code = 404, message = "등록된 유저가 아닙니다.")
+  })
+  public ResponseEntity<BaseResponse> createOrder(@RequestBody OrdersRequestDto request) {
+    OrdersResponseDto response = ordersService.createOrders(SecurityUtil.getCurrentMemberId(), request);
     return ResponseEntity.ok(
-        ApiResponse.builder().message("create order success").data(response).build());
+        BaseResponse.builder().message("주문 생성 성공").data(response).build());
   }
 
   @GetMapping("/{orderId}")
   @ApiOperation(value = "주문 확인", notes = "주문 정보 확인")
-  public ResponseEntity<ApiResponse> getOrder(@PathVariable Long orderId) {
+  @ApiResponses({
+          @ApiResponse(code = 200, message = "주문 정보 확인 성공"),
+          @ApiResponse(code = 404, message = "요청한 자원이 없습니다.")
+  })
+  public ResponseEntity<BaseResponse> getOrder(@PathVariable Long orderId) {
     Orders response = ordersService.getOrder(orderId);
     return ResponseEntity.ok(
-        ApiResponse.builder().message("get order one success").data(response).build());
+        BaseResponse.builder().message("주문 정보 확인 성공").data(response).build());
   }
 
   @PostMapping("/verify-serial")
   @ApiOperation(value = "시리얼 넘버 검증")
-  public ResponseEntity<ApiResponse> verifySerialNum(@RequestBody SerialNumRequestDto request) {
+  @ApiResponses({
+          @ApiResponse(code = 200, message = "시리얼 넘버 검증 성공"),
+          @ApiResponse(code = 403, message = "요청한 자원이 없습니다."),
+          @ApiResponse(code = 400, message = "요청 변수를 확인해주세요.")
+  })
+  public ResponseEntity<BaseResponse> verifySerialNum(@RequestBody SerialNumRequestDto request) {
     ordersService.verifySerialNum(request);
-    return ResponseEntity.ok(ApiResponse.builder().message("verify serialNum success").build());
+    return ResponseEntity.ok(BaseResponse.builder().message("시리얼 넘버 검증 성공").build());
   }
 
   @GetMapping
-  @ApiOperation(value = "주문 목록 확인", notes = "전체 주문 목록 확인")
-  public ResponseEntity<ApiResponse> getOrderAll() {
-    String email = "";
-    List<Orders> response = ordersService.getOrderAll(email);
+  @ApiOperation(value = "사용자 주문 목록 확인", notes = "전체 주문 목록 확인")
+  @ApiResponses({
+          @ApiResponse(code = 200, message = "사용자 주문 목록 확인 성공"),
+          @ApiResponse(code = 404, message = "등록된 유저가 아닙니다.")
+  })
+  public ResponseEntity<BaseResponse> getOrderAll() {
+    List<Orders> response = ordersService.getOrderAll(SecurityUtil.getCurrentMemberId());
     return ResponseEntity.ok(
-        ApiResponse.builder().message("get order all success").data(response).build());
+        BaseResponse.builder().message("사용자 주문 목록 확인 성공").data(response).build());
   }
 }
