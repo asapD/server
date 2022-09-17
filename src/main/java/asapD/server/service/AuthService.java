@@ -11,6 +11,7 @@ import asapD.server.domain.Authority;
 import asapD.server.domain.Member;
 import asapD.server.repository.MemberRepository;
 import asapD.server.utils.RedisClient;
+import asapD.server.utils.SmsClient;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
@@ -40,6 +41,7 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final RedisClient redisClient;
+    private final SmsClient smsClient;
 
     /**
      * 회원가입
@@ -75,30 +77,10 @@ public class AuthService {
      * 전화번호 인증
      *
      */
-    public void SendCertifiedMessage(String phoneNumber, String cerNum){
-        // code redis 에 저장
-        verifiedCodeSave(phoneNumber, cerNum);
-
-        String api_key = "NCSK0TRMGX0QQC86";
-        String api_secret = "RVDMYMYTYNFI0FKDDVKBF3P3XIMLCGX7";
-        Message coolsms = new Message(api_key, api_secret);
-
-        // 4 params(to, from, type, text) are mandatory. must be filled
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("to", phoneNumber);
-        params.put("from", "01086094105");
-        params.put("type", "SMS");
-        params.put("text", "asapD : 인증번호는" + "["+cerNum+"]" + "입니다.");
-        params.put("app_version", "test app 1.2"); // application name and version
-
-        try {
-            JSONObject obj = (JSONObject) coolsms.send(params);
-            System.out.println(obj.toString());
-        } catch (CoolsmsException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getCode());
-            throw new ApiException(ApiExceptionEnum.SMS_EXCEPTION);
-        }
+    public void SendCertifiedMessage(String phoneNumber){
+        String code = smsClient.createRandomNum();
+        verifiedCodeSave(phoneNumber, code);
+        smsClient.sendMessage(phoneNumber, code);
     }
 
     public void verifiedCodeSave(String contact, String code) {
