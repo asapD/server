@@ -32,6 +32,9 @@ public class Store extends BaseEntity{
     @OneToMany(mappedBy = "store")
     List<Item> items = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private StoreCategory storeCategory;
+
     @Builder
     public Store(String name, int owner, String address){
         this.name = name;
