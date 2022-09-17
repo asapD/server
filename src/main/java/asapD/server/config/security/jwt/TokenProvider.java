@@ -42,7 +42,7 @@ public class TokenProvider {
      * @param secretKey : 시크릿 키
      * 시크릿 키(인코딩된값) -> 디코딩 후 -> key 객체로 반환
      */
-    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public TokenProvider(@Value("${spring.jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
