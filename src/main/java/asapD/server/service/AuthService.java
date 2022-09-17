@@ -2,6 +2,7 @@ package asapD.server.service;
 
 import asapD.server.config.security.jwt.TokenProvider;
 import asapD.server.controller.dto.member.MemberContactCodeRequest;
+import asapD.server.controller.dto.member.MemberEmailRequest;
 import asapD.server.controller.dto.member.MemberSignInRequest;
 import asapD.server.controller.dto.member.MemberSignUpRequest;
 import asapD.server.controller.exception.ApiException;
@@ -19,6 +20,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
@@ -112,5 +114,11 @@ public class AuthService {
             throw new ApiException(ApiExceptionEnum.SERIALNUM_INVALID_EXCEPTION);
         }
 
+    }
+
+    public void verifyEmail(MemberEmailRequest memberEmailRequest) {
+        if (memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()) {
+            throw new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION);
+        }
     }
 }

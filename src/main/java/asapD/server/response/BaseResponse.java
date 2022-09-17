@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiResponse {
+public class BaseResponse {
 
   private final Integer status = HttpStatus.OK.value();
 
