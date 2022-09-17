@@ -39,3 +39,4 @@ out/
 ### custom ###
 db.yml
 .DS_Store
+.env

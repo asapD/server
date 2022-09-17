@@ -12,4 +12,10 @@ spring:
     port: 6378
 
 jwt:
-  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWw=
+  secret: ${JWT_KEY}
+
+custom:
+  sms:
+    api-key: ${SMS_API_KEY}
+    api-secret: ${SMS_API_SECRET}
+    source: ${SMS_SOURCE}
