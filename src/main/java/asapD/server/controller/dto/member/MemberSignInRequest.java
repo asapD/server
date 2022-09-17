@@ -15,7 +15,7 @@ public class MemberSignInRequest {
 
     @ApiModelProperty(example = "비밀번호")
     @NotBlank(message = "값이 존재하지 않습니다")
-    @Pattern(regexp = "^(?=.*\\\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}")
+    @Pattern(regexp = "^[0-9a-zA-Z]{8,16}", message = "영문과 숫자를 포함한 8자~16자 조건에 맞지않습니다")
     private String password;
 
 }
