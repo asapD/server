@@ -1,5 +1,6 @@
 package asapD.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Arrays;
 import lombok.Getter;
 
@@ -41,10 +42,11 @@ public class Orders extends BaseEntity{
         orderItem.setOrders(this);
     }
 
-    public static Orders createOrder(Member member, Delivery delivery, List<OrderItem> orderItem) {
+    public static Orders createOrder(Member member, Delivery delivery, List<OrderItem> orderItem, String destination) {
         Orders orders = new Orders();
         orders.setMember(member);
         orders.setDelivery(delivery);
+        orders.setDestination(destination);
         orderItem.forEach(orders::addOrderItem);
         return orders;
     }

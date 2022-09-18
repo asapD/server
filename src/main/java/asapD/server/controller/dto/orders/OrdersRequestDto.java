@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 public class OrdersRequestDto {
 
   @NotBlank
-  private HashMap<Long, Integer> items;
+  private HashMap<String, Integer> items;
 
   @NotBlank
   private String destination;
