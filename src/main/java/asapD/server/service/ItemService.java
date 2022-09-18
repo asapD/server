@@ -16,23 +16,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ItemService {
 
-    private final ItemRepository itemRepository;
+  private final ItemRepository itemRepository;
 
-    @Transactional
-    public List<ItemResponseDto> getItemAll(Pageable pageable) {
+  @Transactional
+  public List<ItemResponseDto> getItemAll(Pageable pageable) {
 //        List<Item> items = itemRepository.findAll(pageable).getContent();
-        List<Item> items = itemRepository.findAll();
+    List<Item> items = itemRepository.findAll();
 
-        List<ItemResponseDto> response = items.stream().map(item ->
+    List<ItemResponseDto> response = items.stream().map(item ->
             ItemResponseDto.builder()
-                    .description(item.getDescription())
-                    .name(item.getName())
-                    .price(item.getPrice())
-                    .storeId(item.getStore().getId())
+                .description(item.getDescription())
+                .name(item.getName())
+                .price(item.getPrice())
+                .storeId(item.getStore().getId())
                 .build())
-            .collect(Collectors.toList());
+        .collect(Collectors.toList());
 
-        log.info("현재 아이템 리스트 개수 " + items.size());
-        return response;
-    }
+    return response;
+  }
 }

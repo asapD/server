@@ -2,16 +2,13 @@ package asapD.server.utils;
 
 import asapD.server.controller.exception.ApiException;
 import asapD.server.controller.exception.ApiExceptionEnum;
-import lombok.RequiredArgsConstructor;
-
+import java.util.HashMap;
+import java.util.Random;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Random;
 
 @Component
 public class SmsClient {
@@ -36,7 +33,6 @@ public class SmsClient {
     }
 
     public void sendMessage(String phoneNumber,String code){
-        // code redis 에 저장
 
        Message coolsms = new Message(apiKey, apiSecret);
 

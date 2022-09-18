@@ -2,16 +2,15 @@ package asapD.server.controller;
 
 import asapD.server.config.security.config.SecurityUtil;
 import asapD.server.controller.dto.orders.OrdersInfoResponseDto;
-import asapD.server.controller.dto.orders.OrdersResponseDto;
 import asapD.server.controller.dto.orders.OrdersRequestDto;
+import asapD.server.controller.dto.orders.OrdersResponseDto;
 import asapD.server.controller.dto.orders.SerialNumRequestDto;
-import asapD.server.domain.Orders;
 import asapD.server.response.BaseResponse;
 import asapD.server.service.OrdersService;
-import java.util.List;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,7 +35,8 @@ public class OrderController {
   })
   public ResponseEntity<BaseResponse> createOrder(@RequestBody OrdersRequestDto request) {
 
-    OrdersResponseDto response = ordersService.createOrders(SecurityUtil.getCurrentMemberId(), request);
+    OrdersResponseDto response =
+        ordersService.createOrders(SecurityUtil.getCurrentMemberId(), request);
 
     return ResponseEntity.ok(
         BaseResponse.builder().message("주문 생성 성공").data(response).build());
@@ -77,8 +77,10 @@ public class OrderController {
           @ApiResponse(code = 404, message = "등록된 유저가 아닙니다.")
   })
   public ResponseEntity<BaseResponse> getOrderAll() {
+
     List<OrdersInfoResponseDto> response =
         ordersService.getOrderAll(SecurityUtil.getCurrentMemberId());
+
     return ResponseEntity.ok(
         BaseResponse.builder().message("사용자 주문 목록 확인 성공").data(response).build());
   }

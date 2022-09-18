@@ -38,16 +38,21 @@ public class Orders extends BaseEntity{
     private String destination;
 
     public void addOrderItem(OrderItem orderItem) {
+
         this.orderItems.add(orderItem);
         orderItem.setOrders(this);
+
     }
 
-    public static Orders createOrder(Member member, Delivery delivery, List<OrderItem> orderItem, String destination) {
+    public static Orders createOrder(Member member, Delivery delivery,
+        List<OrderItem> orderItem, String destination) {
+
         Orders orders = new Orders();
         orders.setMember(member);
         orders.setDelivery(delivery);
         orders.setDestination(destination);
         orderItem.forEach(orders::addOrderItem);
+
         return orders;
     }
 }
