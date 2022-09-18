@@ -1,5 +1,7 @@
 package asapD.server.service;
 
+import asapD.server.controller.dto.orders.OrderItemResponseDto;
+import asapD.server.controller.dto.orders.OrdersInfoResponseDto;
 import asapD.server.controller.dto.orders.SerialNumRequestDto;
 import asapD.server.controller.exception.ApiException;
 import asapD.server.controller.exception.ApiExceptionEnum;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 import javax.swing.text.html.Option;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,7 +49,7 @@ public class OrdersService {
     // 주문 상품 생성
     List<OrderItem> items = new ArrayList<>();
 
-    dto.getItems().keySet().forEach(key -> itemRepository.findById(key)
+    dto.getItems().keySet().forEach(key -> itemRepository.findById(Long.valueOf(key))
         .ifPresent(item -> {
           OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), dto.getItems().get(key));
           items.add(orderItem);
@@ -57,7 +60,7 @@ public class OrdersService {
     delivery.setDownId(1);
 
     // 주문 정보 생성
-    Orders orders = Orders.createOrder(member, delivery, items);
+    Orders orders = Orders.createOrder(member, delivery, items, dto.getDestination());
   
     // 주문 저장
     Orders savedOrder = ordersRepository.save(orders);
@@ -74,8 +77,22 @@ public class OrdersService {
     return serialNum;
   }
 
-  public Orders getOrder(Long orderId) {
-    return ordersRepository.findById(orderId).orElseThrow(() -> {
+  public OrdersInfoResponseDto getOrder(Long orderId) {
+    return ordersRepository.findById(orderId).map(orders ->
+        OrdersInfoResponseDto.builder()
+            .memberId(orders.getMember().getId())
+            .deliveryId(orders.getDelivery().getId())
+            .orderItemList(orders.getOrderItems().stream().map(orderItem ->
+                    OrderItemResponseDto.builder()
+                        .itemId(orderItem.getItem().getId())
+                        .orderId(orderItem.getOrders().getId())
+                        .orderPrice(orderItem.getOrderPrice())
+                        .count(orderItem.getCount())
+                        .build())
+                .collect(Collectors.toList()))
+            .destination(orders.getDestination())
+            .build())
+        .orElseThrow(() -> {
       throw new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION);
     });
   }
@@ -93,12 +110,26 @@ public class OrdersService {
    }
   }
 
-  public List<Orders> getOrderAll(String email) {
+  public List<OrdersInfoResponseDto> getOrderAll(String email) {
     Member member =  memberRepository.findByEmail(email)
         .orElseThrow(() -> {
           throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
         });
 
-    return ordersRepository.findAllByMember(member);
+    return ordersRepository.findAllByMember(member).stream().map(orders ->
+        OrdersInfoResponseDto.builder()
+            .memberId(orders.getMember().getId())
+            .deliveryId(orders.getDelivery().getId())
+            .orderItemList(orders.getOrderItems().stream().map(orderItem ->
+                OrderItemResponseDto.builder()
+                    .itemId(orderItem.getItem().getId())
+                    .orderId(orderItem.getOrders().getId())
+                    .orderPrice(orderItem.getOrderPrice())
+                    .count(orderItem.getCount())
+                    .build())
+                .collect(Collectors.toList()))
+            .destination(orders.getDestination())
+            .build())
+        .collect(Collectors.toList());
   }
 }

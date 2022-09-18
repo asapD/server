@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrdersResponseDto {
 
-  private Long ordersId;
+  private Long orderId;
   private String serialNum;
 
 }

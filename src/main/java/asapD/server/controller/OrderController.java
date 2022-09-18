@@ -1,6 +1,7 @@
 package asapD.server.controller;
 
 import asapD.server.config.security.config.SecurityUtil;
+import asapD.server.controller.dto.orders.OrdersInfoResponseDto;
 import asapD.server.controller.dto.orders.OrdersResponseDto;
 import asapD.server.controller.dto.orders.OrdersRequestDto;
 import asapD.server.controller.dto.orders.SerialNumRequestDto;
@@ -34,7 +35,9 @@ public class OrderController {
           @ApiResponse(code = 404, message = "등록된 유저가 아닙니다.")
   })
   public ResponseEntity<BaseResponse> createOrder(@RequestBody OrdersRequestDto request) {
+
     OrdersResponseDto response = ordersService.createOrders(SecurityUtil.getCurrentMemberId(), request);
+
     return ResponseEntity.ok(
         BaseResponse.builder().message("주문 생성 성공").data(response).build());
   }
@@ -46,7 +49,9 @@ public class OrderController {
           @ApiResponse(code = 404, message = "요청한 자원이 없습니다.")
   })
   public ResponseEntity<BaseResponse> getOrder(@PathVariable Long orderId) {
-    Orders response = ordersService.getOrder(orderId);
+
+    OrdersInfoResponseDto response = ordersService.getOrder(orderId);
+
     return ResponseEntity.ok(
         BaseResponse.builder().message("주문 정보 확인 성공").data(response).build());
   }
@@ -59,7 +64,9 @@ public class OrderController {
           @ApiResponse(code = 400, message = "요청 변수를 확인해주세요.")
   })
   public ResponseEntity<BaseResponse> verifySerialNum(@RequestBody SerialNumRequestDto request) {
+
     ordersService.verifySerialNum(request);
+
     return ResponseEntity.ok(BaseResponse.builder().message("시리얼 넘버 검증 성공").build());
   }
 
@@ -70,7 +77,8 @@ public class OrderController {
           @ApiResponse(code = 404, message = "등록된 유저가 아닙니다.")
   })
   public ResponseEntity<BaseResponse> getOrderAll() {
-    List<Orders> response = ordersService.getOrderAll(SecurityUtil.getCurrentMemberId());
+    List<OrdersInfoResponseDto> response =
+        ordersService.getOrderAll(SecurityUtil.getCurrentMemberId());
     return ResponseEntity.ok(
         BaseResponse.builder().message("사용자 주문 목록 확인 성공").data(response).build());
   }
