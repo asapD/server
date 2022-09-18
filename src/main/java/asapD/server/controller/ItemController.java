@@ -1,5 +1,6 @@
 package asapD.server.controller;
 
+import asapD.server.controller.dto.item.ItemResponseDto;
 import asapD.server.domain.Item;
 import asapD.server.domain.Store;
 import asapD.server.repository.ItemRepository;
@@ -33,7 +34,7 @@ public class ItemController {
     })
     public ResponseEntity<BaseResponse> findAll(@RequestParam("page") int page) {
         PageRequest pageRequest = PageRequest.of(page, 10);
-        List<Item> itemAll = itemService.getItemAll(pageRequest);
+        List<ItemResponseDto> itemAll = itemService.getItemAll(pageRequest);
         return ResponseEntity.ok(BaseResponse.builder().message("전체 아이템 조회 성공").data(itemAll).build());
     }
 
