@@ -34,22 +34,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        ExceptionResponse response = classifyError(e.getBindingResult());
-        return ResponseEntity.status(response.getStatus()).body(
-                ExceptionResponse.builder().status(response.getStatus()).message(response.getMessage())
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ExceptionResponse.builder().status(HttpStatus.BAD_REQUEST.value()).message("입력형식이 맞지 않습니다")
                         .build());
     }
 
-    private ExceptionResponse classifyError(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ExceptionResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .message(bindingResult.getFieldError().getDefaultMessage())
-                    .build();
-        }
-        return ExceptionResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR.value()).message("서버에러 입니다")
-                .build();
-    }
 
 
     @ExceptionHandler(ApiException.class)
