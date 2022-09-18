@@ -1,5 +1,6 @@
 package asapD.server.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,7 @@ public class BaseResponse {
   private final Integer status = HttpStatus.OK.value();
 
   private String message;
+
+  @JsonProperty
   private Object data;
 }
