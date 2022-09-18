@@ -33,7 +33,8 @@ public class StoreController {
 
     List<StoreResponseDto> response = storeService.getStoreAll(pageRequest);
 
-    return ResponseEntity.ok(BaseResponse.builder().message("전체 가게 조회 성공").data(response).build());
+    return ResponseEntity.ok(
+        BaseResponse.builder().message("전체 가게 조회 성공").data(response).build());
   }
 
 }

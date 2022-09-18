@@ -21,4 +21,11 @@ public class Delivery extends BaseEntity{
     private long downId;
 
 
+    public static Delivery createDelivery() {
+
+        Delivery delivery = new Delivery();
+        delivery.setDownId(1);
+
+        return delivery;
+    }
 }

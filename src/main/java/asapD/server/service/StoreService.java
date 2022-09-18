@@ -13,20 +13,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class StoreService {
 
-    private final StoreRepository storeRepository;
+  private final StoreRepository storeRepository;
 
-    @Transactional
-    public List<StoreResponseDto> getStoreAll(Pageable pageable) {
+  @Transactional
+  public List<StoreResponseDto> getStoreAll(Pageable pageable) {
 
-       List<StoreResponseDto> response = storeRepository.findAll().stream().map(store ->
-           StoreResponseDto.builder()
-               .name(store.getName())
-               .address(store.getAddress())
-               .owner(store.getOwner())
-               .build())
-           .collect(Collectors.toList());
+    List<StoreResponseDto> response = storeRepository.findAll().stream().map(store ->
+            StoreResponseDto.builder()
+                .name(store.getName())
+                .address(store.getAddress())
+                .owner(store.getOwner())
+                .build())
+        .collect(Collectors.toList());
 
-        return response;
-    }
+    return response;
+  }
 
 }
