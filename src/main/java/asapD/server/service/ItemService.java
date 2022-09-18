@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -18,20 +19,12 @@ public class ItemService {
 
   private final ItemRepository itemRepository;
 
-  @Transactional
-  public List<ItemResponseDto> getItemAll(Pageable pageable) {
-//        List<Item> items = itemRepository.findAll(pageable).getContent();
-    List<Item> items = itemRepository.findAll();
+  public Page<ItemResponseDto> getItemAll(Pageable pageable) {
 
-    List<ItemResponseDto> response = items.stream().map(item ->
-            ItemResponseDto.builder()
-                .description(item.getDescription())
-                .name(item.getName())
-                .price(item.getPrice())
-                .storeId(item.getStore().getId())
-                .build())
-        .collect(Collectors.toList());
+    Page<Item> result = itemRepository.findAll(pageable);
 
-    return response;
+    Page<ItemResponseDto> itemList = result.map(item -> new ItemResponseDto(item));
+
+    return itemList;
   }
 }
