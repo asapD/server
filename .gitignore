@@ -40,3 +40,4 @@ out/
 db.yml
 .DS_Store
 .env
+application-API-KEY.properties
