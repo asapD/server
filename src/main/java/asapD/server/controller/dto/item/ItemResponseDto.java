@@ -9,12 +9,15 @@ import lombok.NoArgsConstructor;
 
 @Data
 public class ItemResponseDto {
+
+    private Long itemId;
     private String name;
     private String description;
     private int price;
     private Long storeId;
 
     public ItemResponseDto(Item item) {
+        itemId = item.getId();
         name = item.getName();
         description = item.getDescription();
         price = item.getPrice();
