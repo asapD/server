@@ -1,5 +1,6 @@
 package asapD.server.controller;
 
+import asapD.server.config.security.jwt.TokenDto;
 import asapD.server.controller.dto.member.MemberContactCodeRequest;
 import asapD.server.controller.dto.member.MemberContactRequest;
 import asapD.server.controller.dto.member.MemberEmailRequest;
@@ -102,8 +103,8 @@ public class AuthController {
         HttpServletResponse response) {
 
         String accessToken = authService.signIn(memberSignInRequest);
-        response.addHeader("Authorization", "Bearer "+ accessToken);
+        //response.addHeader("Authorization", "Bearer "+ accessToken);
 
-        return ResponseEntity.ok(BaseResponse.builder().message("로그인 성공").build());
+        return ResponseEntity.ok(BaseResponse.builder().message("로그인 성공").data(new TokenDto("Bearer "+accessToken)).build());
     }
 }
