@@ -2,7 +2,7 @@
 
 This project is carried out with an offer from Pablo Airlines. It consists of three parts: server, Android, and Arduino under the theme of building a user authentication-based door lock system.
 
-Progress period : 2022.09.04 ~ 2022.09.23
+Progress period : 2022.09.04 ~ 2022.09.28
 
 Hosted by: kusitsm
 
@@ -11,7 +11,7 @@ Hosted by: kusitsm
 1. Install server application.
 
 ```` bash
-  git clone 
+  git clone https://github.com/asapD/server.git
 ````
 
 2. Execute docker-compose to run db server.
