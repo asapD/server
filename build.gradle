@@ -50,3 +50,26 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'asapD.server.ServerApplication'
+	}
+	//의존성추가
+	from {
+		configurations.runtimeClasspath.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}
+	//중복제거
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Tar){
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Zip){
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
