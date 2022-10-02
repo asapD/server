@@ -58,6 +58,9 @@ Hosted by: kusitsm
 
 ## ⬇️ Flow Scenario
 
+![image](https://user-images.githubusercontent.com/61505572/193457172-c9f7ae59-1f2d-4e21-aaa1-7a8c5d23d610.png)
+
+
 1. 회원가입한 사용자가 asapD 어플을 통해 상품을 주문한다.
 2. 서버에서 주문ID와 사용자ID, `prefix` 값을 통해 serialNum을 생성하고 이를 Redis에 저장한다. 그 후 사용자에게 serialNum을 QR코드로 보여준다.
 3. 사용자가 도어락 기기 ( 아두이노 )와 블루투스 연결을 한다.
