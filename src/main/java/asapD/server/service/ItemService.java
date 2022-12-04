@@ -19,9 +19,7 @@ public class ItemService {
   public Page<ItemResponse> getItemAll(Pageable pageable) {
 
     Page<Item> result = itemRepository.findAll(pageable);
+    return result.map(item -> new ItemResponse(item));
 
-    Page<ItemResponse> itemList = result.map(item -> new ItemResponse(item));
-
-    return itemList;
   }
 }

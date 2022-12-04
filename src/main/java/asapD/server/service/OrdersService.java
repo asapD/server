@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static asapD.server.controller.exception.ApiExceptionEnum.*;
+
 @Service
 @RequiredArgsConstructor
 public class OrdersService {
@@ -41,7 +43,7 @@ public class OrdersService {
   public OrdersResponse createOrders(String email, OrdersRequest dto) {
 
     Member member = memberRepository.findByEmail(email).orElseThrow(() -> {
-      throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
+      throw new ApiException(MEMBER_NOT_FOUND_EXCEPTION);
     });
 
     List<OrderItem> items = new ArrayList<>();
@@ -89,7 +91,7 @@ public class OrdersService {
                 .destination(orders.getDestination())
                 .build())
         .orElseThrow(() -> {
-          throw new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION);
+          throw new ApiException(NOT_FOUND_EXCEPTION);
         });
   }
 
@@ -99,11 +101,11 @@ public class OrdersService {
 
     String value = Optional.ofNullable(redisClient.getValue(key))
         .orElseThrow(() -> {
-          throw new ApiException(ApiExceptionEnum.TIMEOUT_EXCEPTION);
+          throw new ApiException(TIMEOUT_EXCEPTION);
         });
 
     if (!value.equals(request.getSerialNum())) {
-      throw new ApiException(ApiExceptionEnum.SERIALNUM_INVALID_EXCEPTION);
+      throw new ApiException(SERIALNUM_INVALID_EXCEPTION);
     }
   }
 
@@ -111,7 +113,7 @@ public class OrdersService {
 
     Member member = memberRepository.findByEmail(email)
         .orElseThrow(() -> {
-          throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
+          throw new ApiException(MEMBER_NOT_FOUND_EXCEPTION);
         });
 
     return ordersRepository.findAllByMember(member).stream().map(orders ->

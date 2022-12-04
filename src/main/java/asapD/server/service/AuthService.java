@@ -20,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static asapD.server.controller.exception.ApiExceptionEnum.*;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -78,10 +80,10 @@ public class AuthService {
 
         String findCode =
             Optional.ofNullable(redisClient.getValue(memberContactCodeRequest.getContact()))
-                .orElseThrow(() -> new ApiException(ApiExceptionEnum.TIMEOUT_EXCEPTION));
+                .orElseThrow(() -> new ApiException(TIMEOUT_EXCEPTION));
 
         if (!findCode.equals(memberContactCodeRequest.getCode())) {
-            throw new ApiException(ApiExceptionEnum.SERIALNUM_INVALID_EXCEPTION);
+            throw new ApiException(SERIALNUM_INVALID_EXCEPTION);
         }
 
     }
@@ -89,7 +91,7 @@ public class AuthService {
     public void verifyEmail(MemberEmailRequest memberEmailRequest) {
 
         if (memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()) {
-            throw new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION);
+            throw new ApiException(DUPLICATION_VALUE_EXCEPTION);
         }
 
     }
