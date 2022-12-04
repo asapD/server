@@ -25,4 +25,6 @@ public class RedisClient {
     ValueOperations<String, String> values = redisTemplate.opsForValue();
     return values.get(key);
   }
+
+
 }

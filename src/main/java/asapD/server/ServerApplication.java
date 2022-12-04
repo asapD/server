@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
-@SpringBootApplication//swagger 동작확인을 위해 넣음 (개발 시 삭제)
+@SpringBootApplication
 public class ServerApplication {
 
 	public static void main(String[] args) {

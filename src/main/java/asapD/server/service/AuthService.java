@@ -32,11 +32,7 @@ public class AuthService {
     private final RedisClient redisClient;
     private final SmsClient smsClient;
 
-    /**
-     * 회원가입
-     *
-     * @param memberSignUpRequest
-     */
+
     public void signUp(MemberSignUpRequest memberSignUpRequest) {
 
         Member member = Member.builder()
@@ -49,12 +45,7 @@ public class AuthService {
         memberRepository.save(member);
     }
 
-    /**
-     * 로그인
-     *
-     * @param memberSignInRequest
-     * @return token
-     */
+
     public String signIn(MemberSignInRequest memberSignInRequest) {
 
         UsernamePasswordAuthenticationToken authenticationToken
@@ -68,9 +59,7 @@ public class AuthService {
     }
 
 
-    /**
-     * 전화번호 인증
-     */
+
     public void SendCertifiedMessage(String phoneNumber) {
 
         String code = smsClient.createRandomNum();

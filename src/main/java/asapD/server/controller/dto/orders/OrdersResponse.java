@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SerialNumRequestDto {
+public class OrdersResponse {
 
-  @NotBlank
+  private Long orderId;
   private String serialNum;
 
-  @NotBlank
-  private Long orderId;
 }

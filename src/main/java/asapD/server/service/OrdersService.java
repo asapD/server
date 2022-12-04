@@ -1,10 +1,10 @@
 package asapD.server.service;
 
-import asapD.server.controller.dto.orders.OrderItemResponseDto;
-import asapD.server.controller.dto.orders.OrdersInfoResponseDto;
-import asapD.server.controller.dto.orders.OrdersRequestDto;
-import asapD.server.controller.dto.orders.OrdersResponseDto;
-import asapD.server.controller.dto.orders.SerialNumRequestDto;
+import asapD.server.controller.dto.orders.OrderItemResponse;
+import asapD.server.controller.dto.orders.OrdersInfoResponse;
+import asapD.server.controller.dto.orders.OrdersRequest;
+import asapD.server.controller.dto.orders.OrdersResponse;
+import asapD.server.controller.dto.orders.SerialNumRequest;
 import asapD.server.controller.exception.ApiException;
 import asapD.server.controller.exception.ApiExceptionEnum;
 import asapD.server.domain.Delivery;
@@ -38,7 +38,7 @@ public class OrdersService {
   private String prefix;
 
   @Transactional
-  public OrdersResponseDto createOrders(String email, OrdersRequestDto dto) {
+  public OrdersResponse createOrders(String email, OrdersRequest dto) {
 
     Member member = memberRepository.findByEmail(email).orElseThrow(() -> {
       throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
@@ -60,7 +60,7 @@ public class OrdersService {
     Orders savedOrder = ordersRepository.save(orders);
 
     String serialNum = createSerialNum(savedOrder.getId(), member.getId());
-    return new OrdersResponseDto(orders.getId(), serialNum);
+    return new OrdersResponse(orders.getId(), serialNum);
   }
 
   private String createSerialNum(Long orderId, Long memberId) {
@@ -72,14 +72,14 @@ public class OrdersService {
     return serialNum;
   }
 
-  public OrdersInfoResponseDto getOrder(Long orderId) {
+  public OrdersInfoResponse getOrder(Long orderId) {
 
     return ordersRepository.findById(orderId).map(orders ->
-            OrdersInfoResponseDto.builder()
+            OrdersInfoResponse.builder()
                 .memberId(orders.getMember().getId())
                 .deliveryId(orders.getDelivery().getId())
                 .orderItemList(orders.getOrderItems().stream().map(orderItem ->
-                        OrderItemResponseDto.builder()
+                        OrderItemResponse.builder()
                             .itemId(orderItem.getItem().getId())
                             .orderId(orderItem.getOrders().getId())
                             .orderPrice(orderItem.getOrderPrice())
@@ -93,7 +93,7 @@ public class OrdersService {
         });
   }
 
-  public void verifySerialNum(SerialNumRequestDto request) {
+  public void verifySerialNum(SerialNumRequest request) {
 
     String key = prefix + request.getOrderId();
 
@@ -107,7 +107,7 @@ public class OrdersService {
     }
   }
 
-  public List<OrdersInfoResponseDto> getOrderAll(String email) {
+  public List<OrdersInfoResponse> getOrderAll(String email) {
 
     Member member = memberRepository.findByEmail(email)
         .orElseThrow(() -> {
@@ -115,11 +115,11 @@ public class OrdersService {
         });
 
     return ordersRepository.findAllByMember(member).stream().map(orders ->
-            OrdersInfoResponseDto.builder()
+            OrdersInfoResponse.builder()
                 .memberId(orders.getMember().getId())
                 .deliveryId(orders.getDelivery().getId())
                 .orderItemList(orders.getOrderItems().stream().map(orderItem ->
-                        OrderItemResponseDto.builder()
+                        OrderItemResponse.builder()
                             .itemId(orderItem.getItem().getId())
                             .orderId(orderItem.getOrders().getId())
                             .orderPrice(orderItem.getOrderPrice())
