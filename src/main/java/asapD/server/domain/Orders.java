@@ -31,8 +31,6 @@ public class Orders extends BaseEntity{
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    private String destination;
-
     public void addOrderItem(OrderItem orderItem) {
 
         this.orderItems.add(orderItem);

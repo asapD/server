@@ -76,23 +76,12 @@ public class OrdersService {
 
   public OrdersInfoResponse getOrder(Long orderId) {
 
-    return ordersRepository.findById(orderId).map(orders ->
-            OrdersInfoResponse.builder()
-                .memberId(orders.getMember().getId())
-                .deliveryId(orders.getDelivery().getId())
-                .orderItemList(orders.getOrderItems().stream().map(orderItem ->
-                        OrderItemResponse.builder()
-                            .itemId(orderItem.getItem().getId())
-                            .orderId(orderItem.getOrders().getId())
-                            .orderPrice(orderItem.getOrderPrice())
-                            .count(orderItem.getCount())
-                            .build())
-                    .collect(Collectors.toList()))
-                .destination(orders.getDestination())
-                .build())
-        .orElseThrow(() -> {
-          throw new ApiException(NOT_FOUND_EXCEPTION);
-        });
+    Orders order = ordersRepository.findById(orderId).orElseThrow(
+            () -> new ApiException(ORDER_NOT_FOUND_EXCEPTION)
+    );
+
+    return new OrdersInfoResponse(order);
+
   }
 
   public void verifySerialNum(SerialNumRequest request) {
@@ -112,24 +101,10 @@ public class OrdersService {
   public List<OrdersInfoResponse> getOrderAll(String email) {
 
     Member member = memberRepository.findByEmail(email)
-        .orElseThrow(() -> {
-          throw new ApiException(MEMBER_NOT_FOUND_EXCEPTION);
-        });
+            .orElseThrow(() -> {
+              throw new ApiException(MEMBER_NOT_FOUND_EXCEPTION);
+            });
 
-    return ordersRepository.findAllByMember(member).stream().map(orders ->
-            OrdersInfoResponse.builder()
-                .memberId(orders.getMember().getId())
-                .deliveryId(orders.getDelivery().getId())
-                .orderItemList(orders.getOrderItems().stream().map(orderItem ->
-                        OrderItemResponse.builder()
-                            .itemId(orderItem.getItem().getId())
-                            .orderId(orderItem.getOrders().getId())
-                            .orderPrice(orderItem.getOrderPrice())
-                            .count(orderItem.getCount())
-                            .build())
-                    .collect(Collectors.toList()))
-                .destination(orders.getDestination())
-                .build())
-        .collect(Collectors.toList());
+    return ordersRepository.findAllByMember(member).stream().map(OrdersInfoResponse::new).collect(Collectors.toList());
   }
 }
