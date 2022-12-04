@@ -29,8 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
-    private final MemberRepository memberRepository;
-
 
     @PostMapping("/sign-up")
     @ApiOperation(value = "회원가입")
@@ -45,6 +43,7 @@ public class AuthController {
 
         return ResponseEntity.ok(BaseResponse.builder().message("회원가입 성공").build());
     }
+
 
 
     @PostMapping("/verify-email")
@@ -99,11 +98,9 @@ public class AuthController {
             @ApiResponse(code = 400, message = "로그인 실패", responseHeaders = @ResponseHeader())
     })
     public ResponseEntity<BaseResponse> signIn(
-        @RequestBody @Validated MemberSignInRequest memberSignInRequest,
-        HttpServletResponse response) {
+        @RequestBody @Validated MemberSignInRequest memberSignInRequest) {
 
         String accessToken = authService.signIn(memberSignInRequest);
-        //response.addHeader("Authorization", "Bearer "+ accessToken);
 
         return ResponseEntity.ok(BaseResponse.builder().message("로그인 성공").data(new TokenDto("Bearer "+accessToken)).build());
     }

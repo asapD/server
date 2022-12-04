@@ -1,10 +1,10 @@
 package asapD.server.controller;
 
 import asapD.server.config.security.config.SecurityUtil;
-import asapD.server.controller.dto.orders.OrdersInfoResponseDto;
-import asapD.server.controller.dto.orders.OrdersRequestDto;
-import asapD.server.controller.dto.orders.OrdersResponseDto;
-import asapD.server.controller.dto.orders.SerialNumRequestDto;
+import asapD.server.controller.dto.orders.OrdersInfoResponse;
+import asapD.server.controller.dto.orders.OrdersRequest;
+import asapD.server.controller.dto.orders.OrdersResponse;
+import asapD.server.controller.dto.orders.SerialNumRequest;
 import asapD.server.response.BaseResponse;
 import asapD.server.service.OrdersService;
 import io.swagger.annotations.ApiOperation;
@@ -33,9 +33,9 @@ public class OrderController {
           @ApiResponse(code = 200, message = "주문 생성 성공"),
           @ApiResponse(code = 404, message = "등록된 유저가 아닙니다.")
   })
-  public ResponseEntity<BaseResponse> createOrder(@RequestBody OrdersRequestDto request) {
+  public ResponseEntity<BaseResponse> createOrder(@RequestBody OrdersRequest request) {
 
-    OrdersResponseDto response =
+    OrdersResponse response =
         ordersService.createOrders(SecurityUtil.getCurrentMemberId(), request);
 
     return ResponseEntity.ok(
@@ -50,7 +50,7 @@ public class OrderController {
   })
   public ResponseEntity<BaseResponse> getOrder(@PathVariable Long orderId) {
 
-    OrdersInfoResponseDto response = ordersService.getOrder(orderId);
+    OrdersInfoResponse response = ordersService.getOrder(orderId);
 
     return ResponseEntity.ok(
         BaseResponse.builder().message("주문 정보 확인 성공").data(response).build());
@@ -63,7 +63,7 @@ public class OrderController {
           @ApiResponse(code = 403, message = "요청한 자원이 없습니다."),
           @ApiResponse(code = 400, message = "요청 변수를 확인해주세요.")
   })
-  public ResponseEntity<BaseResponse> verifySerialNum(@RequestBody SerialNumRequestDto request) {
+  public ResponseEntity<BaseResponse> verifySerialNum(@RequestBody SerialNumRequest request) {
 
     ordersService.verifySerialNum(request);
 
@@ -78,7 +78,7 @@ public class OrderController {
   })
   public ResponseEntity<BaseResponse> getOrderAll() {
 
-    List<OrdersInfoResponseDto> response =
+    List<OrdersInfoResponse> response =
         ordersService.getOrderAll(SecurityUtil.getCurrentMemberId());
 
     return ResponseEntity.ok(

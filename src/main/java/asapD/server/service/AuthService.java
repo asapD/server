@@ -20,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static asapD.server.controller.exception.ApiExceptionEnum.*;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -32,11 +34,7 @@ public class AuthService {
     private final RedisClient redisClient;
     private final SmsClient smsClient;
 
-    /**
-     * 회원가입
-     *
-     * @param memberSignUpRequest
-     */
+
     public void signUp(MemberSignUpRequest memberSignUpRequest) {
 
         Member member = Member.builder()
@@ -49,12 +47,7 @@ public class AuthService {
         memberRepository.save(member);
     }
 
-    /**
-     * 로그인
-     *
-     * @param memberSignInRequest
-     * @return token
-     */
+
     public String signIn(MemberSignInRequest memberSignInRequest) {
 
         UsernamePasswordAuthenticationToken authenticationToken
@@ -68,9 +61,7 @@ public class AuthService {
     }
 
 
-    /**
-     * 전화번호 인증
-     */
+
     public void SendCertifiedMessage(String phoneNumber) {
 
         String code = smsClient.createRandomNum();
@@ -89,10 +80,10 @@ public class AuthService {
 
         String findCode =
             Optional.ofNullable(redisClient.getValue(memberContactCodeRequest.getContact()))
-                .orElseThrow(() -> new ApiException(ApiExceptionEnum.TIMEOUT_EXCEPTION));
+                .orElseThrow(() -> new ApiException(TIMEOUT_EXCEPTION));
 
         if (!findCode.equals(memberContactCodeRequest.getCode())) {
-            throw new ApiException(ApiExceptionEnum.SERIALNUM_INVALID_EXCEPTION);
+            throw new ApiException(SERIALNUM_INVALID_EXCEPTION);
         }
 
     }
@@ -100,7 +91,7 @@ public class AuthService {
     public void verifyEmail(MemberEmailRequest memberEmailRequest) {
 
         if (memberRepository.findByEmail(memberEmailRequest.getEmail()).isPresent()) {
-            throw new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION);
+            throw new ApiException(DUPLICATION_VALUE_EXCEPTION);
         }
 
     }

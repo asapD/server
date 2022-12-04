@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class OrdersInfoResponseDto {
+public class OrdersInfoResponse {
 
-  private Long memberId;
-  private List<OrderItemResponseDto> orderItemList;
-  private Long deliveryId;
+  private long memberId;
+  private List<OrderItemResponse> orderItemList;
+  private long deliveryId;
   private String destination;
 }

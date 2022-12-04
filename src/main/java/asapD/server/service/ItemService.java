@@ -1,11 +1,8 @@
 package asapD.server.service;
 
-import asapD.server.controller.dto.item.ItemResponseDto;
+import asapD.server.controller.dto.item.ItemResponse;
 import asapD.server.domain.Item;
 import asapD.server.repository.ItemRepository;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,12 +16,10 @@ public class ItemService {
 
   private final ItemRepository itemRepository;
 
-  public Page<ItemResponseDto> getItemAll(Pageable pageable) {
+  public Page<ItemResponse> getItemAll(Pageable pageable) {
 
     Page<Item> result = itemRepository.findAll(pageable);
+    return result.map(item -> new ItemResponse(item));
 
-    Page<ItemResponseDto> itemList = result.map(item -> new ItemResponseDto(item));
-
-    return itemList;
   }
 }

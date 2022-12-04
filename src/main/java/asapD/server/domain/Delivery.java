@@ -15,16 +15,16 @@ public class Delivery extends BaseEntity{
     @Column(name = "delivery_id")
     private Long id;
 
-//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "delivery")
-//    private Order order;
-
     private long downId;
 
+    private String destination;
 
-    public static Delivery createDelivery() {
+
+    public static Delivery createDelivery(String destination) {
 
         Delivery delivery = new Delivery();
         delivery.setDownId(1);
+        delivery.destination = destination;
 
         return delivery;
     }

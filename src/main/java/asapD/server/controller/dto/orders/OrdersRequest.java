@@ -12,11 +12,9 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrdersRequestDto {
+public class OrdersRequest {
 
-  @NotBlank
   private HashMap<String, Integer> items;
-
-  @NotBlank
   private String destination;
+
 }

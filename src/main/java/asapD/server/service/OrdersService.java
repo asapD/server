@@ -1,10 +1,10 @@
 package asapD.server.service;
 
-import asapD.server.controller.dto.orders.OrderItemResponseDto;
-import asapD.server.controller.dto.orders.OrdersInfoResponseDto;
-import asapD.server.controller.dto.orders.OrdersRequestDto;
-import asapD.server.controller.dto.orders.OrdersResponseDto;
-import asapD.server.controller.dto.orders.SerialNumRequestDto;
+import asapD.server.controller.dto.orders.OrderItemResponse;
+import asapD.server.controller.dto.orders.OrdersInfoResponse;
+import asapD.server.controller.dto.orders.OrdersRequest;
+import asapD.server.controller.dto.orders.OrdersResponse;
+import asapD.server.controller.dto.orders.SerialNumRequest;
 import asapD.server.controller.exception.ApiException;
 import asapD.server.controller.exception.ApiExceptionEnum;
 import asapD.server.domain.Delivery;
@@ -20,8 +20,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static asapD.server.controller.exception.ApiExceptionEnum.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +36,14 @@ public class OrdersService {
 
   private final RedisClient redisClient;
 
-  private final String prefix = "asapD20220904";
+  @Value("${serial.prefix}")
+  private String prefix;
 
   @Transactional
-  public OrdersResponseDto createOrders(String email, OrdersRequestDto dto) {
+  public OrdersResponse createOrders(String email, OrdersRequest dto) {
 
     Member member = memberRepository.findByEmail(email).orElseThrow(() -> {
-      throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
+      throw new ApiException(MEMBER_NOT_FOUND_EXCEPTION);
     });
 
     List<OrderItem> items = new ArrayList<>();
@@ -51,14 +55,14 @@ public class OrdersService {
           items.add(orderItem);
         }));
 
-    Delivery delivery = Delivery.createDelivery();
+    Delivery delivery = Delivery.createDelivery(dto.getDestination());
 
-    Orders orders = Orders.createOrder(member, delivery, items, dto.getDestination());
+    Orders orders = Orders.createOrder(member, delivery, items);
 
     Orders savedOrder = ordersRepository.save(orders);
 
     String serialNum = createSerialNum(savedOrder.getId(), member.getId());
-    return new OrdersResponseDto(orders.getId(), serialNum);
+    return new OrdersResponse(orders.getId(), serialNum);
   }
 
   private String createSerialNum(Long orderId, Long memberId) {
@@ -70,14 +74,14 @@ public class OrdersService {
     return serialNum;
   }
 
-  public OrdersInfoResponseDto getOrder(Long orderId) {
+  public OrdersInfoResponse getOrder(Long orderId) {
 
     return ordersRepository.findById(orderId).map(orders ->
-            OrdersInfoResponseDto.builder()
+            OrdersInfoResponse.builder()
                 .memberId(orders.getMember().getId())
                 .deliveryId(orders.getDelivery().getId())
                 .orderItemList(orders.getOrderItems().stream().map(orderItem ->
-                        OrderItemResponseDto.builder()
+                        OrderItemResponse.builder()
                             .itemId(orderItem.getItem().getId())
                             .orderId(orderItem.getOrders().getId())
                             .orderPrice(orderItem.getOrderPrice())
@@ -87,37 +91,37 @@ public class OrdersService {
                 .destination(orders.getDestination())
                 .build())
         .orElseThrow(() -> {
-          throw new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION);
+          throw new ApiException(NOT_FOUND_EXCEPTION);
         });
   }
 
-  public void verifySerialNum(SerialNumRequestDto request) {
+  public void verifySerialNum(SerialNumRequest request) {
 
     String key = prefix + request.getOrderId();
 
     String value = Optional.ofNullable(redisClient.getValue(key))
         .orElseThrow(() -> {
-          throw new ApiException(ApiExceptionEnum.TIMEOUT_EXCEPTION);
+          throw new ApiException(TIMEOUT_EXCEPTION);
         });
 
     if (!value.equals(request.getSerialNum())) {
-      throw new ApiException(ApiExceptionEnum.SERIALNUM_INVALID_EXCEPTION);
+      throw new ApiException(SERIALNUM_INVALID_EXCEPTION);
     }
   }
 
-  public List<OrdersInfoResponseDto> getOrderAll(String email) {
+  public List<OrdersInfoResponse> getOrderAll(String email) {
 
     Member member = memberRepository.findByEmail(email)
         .orElseThrow(() -> {
-          throw new ApiException(ApiExceptionEnum.MEMBER_NOT_FOUND_EXCEPTION);
+          throw new ApiException(MEMBER_NOT_FOUND_EXCEPTION);
         });
 
     return ordersRepository.findAllByMember(member).stream().map(orders ->
-            OrdersInfoResponseDto.builder()
+            OrdersInfoResponse.builder()
                 .memberId(orders.getMember().getId())
                 .deliveryId(orders.getDelivery().getId())
                 .orderItemList(orders.getOrderItems().stream().map(orderItem ->
-                        OrderItemResponseDto.builder()
+                        OrderItemResponse.builder()
                             .itemId(orderItem.getItem().getId())
                             .orderId(orderItem.getOrders().getId())
                             .orderPrice(orderItem.getOrderPrice())
