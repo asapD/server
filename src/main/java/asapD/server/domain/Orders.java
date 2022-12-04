@@ -31,10 +31,6 @@ public class Orders extends BaseEntity{
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-//    @ManyToOne
-//    @JoinColumn(name = "store_id")
-//    private Store store;
-
     private String destination;
 
     public void addOrderItem(OrderItem orderItem) {
@@ -45,12 +41,11 @@ public class Orders extends BaseEntity{
     }
 
     public static Orders createOrder(Member member, Delivery delivery,
-        List<OrderItem> orderItem, String destination) {
+        List<OrderItem> orderItem) {
 
         Orders orders = new Orders();
         orders.setMember(member);
         orders.setDelivery(delivery);
-        orders.setDestination(destination);
         orderItem.forEach(orders::addOrderItem);
 
         return orders;

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,8 @@ public class OrdersService {
 
   private final RedisClient redisClient;
 
-  private final String prefix = "asapD20220904";
+  @Value("${serial.prefix}")
+  private String prefix;
 
   @Transactional
   public OrdersResponseDto createOrders(String email, OrdersRequestDto dto) {
@@ -51,9 +53,9 @@ public class OrdersService {
           items.add(orderItem);
         }));
 
-    Delivery delivery = Delivery.createDelivery();
+    Delivery delivery = Delivery.createDelivery(dto.getDestination());
 
-    Orders orders = Orders.createOrder(member, delivery, items, dto.getDestination());
+    Orders orders = Orders.createOrder(member, delivery, items);
 
     Orders savedOrder = ordersRepository.save(orders);
 
