@@ -1,5 +1,6 @@
 package asapD.server.controller.dto.orders;
 
+import asapD.server.domain.OrderItem;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +9,12 @@ import lombok.Data;
 public class OrderItemResponse {
 
   private long itemId;
-  private long orderId;
   private int orderPrice;
   private int count;
+
+  public OrderItemResponse(OrderItem orderItem) {
+    itemId = orderItem.getId();
+    orderPrice = orderItem.getOrderPrice();
+    count = orderItem.getCount();
+  }
 }
